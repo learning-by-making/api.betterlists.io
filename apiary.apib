@@ -1,0 +1,718 @@
+FORMAT: 1A
+HOST: http://api.betterlists.io/
+
+# betterlists
+
+[DRAFT]
+Api for `betterlists` project (Learning By Making)
+
+# Data Structures
+
+## Session (object)
++ email: johndoe@example.com (string, required)
++ password: sekr3t (string, required)
+
+##########################################################################
+
+## User Base New (object)
++ type: user (string, required)
++ attributes
+    + email: johndoe@example.com (string)
+    + password: sekr3t (string)
+    + name: John (string)
+    + surname: Doe (string)
+    + city: Rome (string)
+    + privacy: true (boolean)
+    + phone: +12 213 1232121 (string)
+
+## User Base (object)
++ id: 1
++ Include User Base New
+
+## User New (object)
++ data (User Base New)
+
+## User (object)
++ data (User Base)
+
+##########################################################################
+
+## List Base New (object)
++ type: list (string, required)
++ attributes
+    + title: A list (string, required)
+
+## List Base (object)
++ id: 1
++ Include List Base New
+
+## List Base With Relationships (object)
++ Include List Base
++ relationships
+    + author
+        + links
+            + related: /lists/1/author (string, required)
+    + resources
+        + links
+            + related: /lists/1/resources (string, required)
+
+## List New (object)
++ data (List Base New)
+
+## List (object)
++ data (List Base)
+
+## List With Relationships (object)
++ data (List Base With Relationships)
+
+## List Collection
++ data (array[List Base])
+
+## List Collection With Relationships
++ Include List Pagination Links
++ data (array[List Base With Relationships])
+
+## List Pagination Links
++ links
+    + self: /lists?page[number]=3&page[size]=2
+    + first: /lists?page[number]=1&page[size]=2
+    + prev: /lists?page[number]=2&page[size]=2
+    + next: /lists?page[number]=4&page[size]=2
+    + last: /lists?page[number]=13&page[size]=2
+
+##########################################################################
+
+## Resource Base New (object)
++ type: resource (string, required)
++ attributes
+    + title: A List's Resource (string, required)
+    + url (string)
+
+## Resource Base (object)
++ id: 1
++ Include Resource Base New
+
+## Resource Base With Relationships (object)
++ Include Resource Base
++ relationships
+    + vote
+        + links
+            + related: /resources/1/votes/1 (string, required)
+
+## Resource New (object)
++ data (Resource Base New)
+
+## Resource (object)
++ data (Resource Base)
+
+## Resource With Relationships (object)
++ data (Resource Base With Relationships)
+
+## Resource Collection
++ data (array[Resource Base])
+
+## Resource Collection With Relationships
++ Include Resource Pagination Links
++ data (array[Resource Base With Relationships])
+
+## Resource Pagination Links
++ links
+    + self: /resources?page[number]=3&page[size]=2
+    + first: /resources?page[number]=1&page[size]=2
+    + prev: /resources?page[number]=2&page[size]=2
+    + next: /resources?page[number]=4&page[size]=2
+    + last: /resources?page[number]=13&page[size]=2
+
+##########################################################################
+
+## Vote Base New (object)
++ type: vote (string, required)
++ attributes
+    + value: 0 (number, required)
+
+## Vote Base (object)
++ id: 1
++ Include Vote Base New
+
+## Vote New (object)
++ data (Vote Base New)
+
+## Vote (object)
++ data (Vote Base)
+
+##########################################################################
+
+# Group Session
+
+## Session [/sessions]
+The session resource allows users to sign in, sign out and to check their current session status.
+A user can have several open sessions at the same time.
+If the session identified by the Authorization header can't be found, a `401` error is returned.
+
+### Sign in [POST]
+User sign in.
+This API returns the email and the authentication token in the response body on succesfully login.
+(? token in the body or in the header? )
+
++ Attributes (Session)
+        
++ Request (application/vnd.api+json)
+
+        {
+            "data": {
+                "type": "session",
+                "attributes": {
+                    "email": "johndoe@example.com",
+                    "password": "sekr3t"
+                }
+            }
+        }
+
++ Response 201 (application/vnd.api+json)
+
+    + Body
+            
+            { 
+                "data": {
+                    "type": "session",
+                    "attributes": {
+                        "email": "johndoe@example.com",
+                        "auth_token": "sessionid123"
+                    }
+                }
+            }
+
+### Sign out [DELETE /sessions/{id}]
+User sign out.
+This API destroy user session
+
++ Parameters
+    + id (number) - ID of the User in the form of an integer
+
++ Request (application/vnd.api+json)
+    
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 204 (application/vnd.api+json)
+
+
+# Group User
+The User resource allows users to sign up, get
+or set account properties or destroy (deactivate) their accounts.
+
+## User [/users/{id}]
+
++ Parameters
+    + id (number) - ID of the User in the form of an integer
+
+### Get user profile [GET]
+Api to get user profile
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (User)
+
+### Update user information [PATCH]
+API to update user information.
+It responds with the updated resource
+
++ Attributes (User)
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
++ Response 200 (application/vnd.api+json)
+
+### Delete user [DELETE /users/{id}]
+Api to deactivate user
+
++ Request (application/vnd.api+json)
+    
+    + Headers
+            
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 204 (application/vnd.api+json)
+
+## Password reset [/users/{id}/password]
+Da riformulare, il client non conosce il suo ID
+
+### Reset password [POST]
+
++ Request (application/vnd.api+json)
+
++ Response 204 (application/vnd.api+json)
+
+## User Collection [/users]
+
+### Sign up a new user [POST]
+Api to sign up a new user
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
+    + Attributes (User New)
+
++ Response 201 (application/vnd.api+json)
+
+   + Attributes (User)
+    
+# Group List
+
+## List [/lists/{id}]
+
++ Parameters
+
+    + id: 1 (required, string) - list id
+
+### Fetch [GET]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (List With Relationships)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
+### Update [PATCH]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
+    + Attributes (List)
+
++ Response 201 (application/vnd.api+json)
+
+    + Attributes (List With Relationships)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
++ Response 403 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Unknown request type"
+            }]
+        }
+
++ Response 409 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "409",
+                "title": "Conflict",
+                "detail": "Invalid type provided, only supported type is 'list'"
+            }]
+        }
+
+### Delete [DELETE]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 204 (application/vnd.api+json)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
+## List Collection [/lists]
+
+### Fetch all lists [GET]
+Fetch all lists. 
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (List Collection With Relationships)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
+### Create [POST]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
+    + Attributes (List New)
+
++ Response 201 (application/vnd.api+json)
+
+    + Attributes (List With Relationships)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
++ Response 403 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Unknown request type"
+            }]
+        }
+
++ Response 409 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "409",
+                "title": "Conflict",
+                "detail": "Invalid type provided, only supported type is 'list'"
+            }]
+        }
+
+# Group Resource
+
+## List's Resource [/lists/{list_id}/resources/{resource_id}]
+
++ Parameters
+
+    + list_id: 1 (required, string) - request list id
+    + resource_id: 1 (required, string) - request resource id
+
+### Fetch [GET]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Resource With Relationships)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
+### Update [PATCH]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
+    + Attributes (Resource)
+
++ Response 201 (application/vnd.api+json)
+
+    + Attributes (Resource With Relationships)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
++ Response 403 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Unknown request type"
+            }]
+        }
+
++ Response 409 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "409",
+                "title": "Conflict",
+                "detail": "Invalid type provided, only supported type is 'resource'"
+            }]
+        }
+
+### Delete [DELETE]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 204 (application/vnd.api+json)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
+## List's Resource Collection [/lists/{id}/resources]
+
++ Parameters
+
+    + id: 1 (required, string) - list id
+
+### Fetch all resources [GET]
+Fetch all resources. 
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Resource Collection With Relationships)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
+### Create [POST]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
+    + Attributes (Resource New)
+
++ Response 201 (application/vnd.api+json)
+
+    + Attributes (Resource With Relationships)
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
++ Response 403 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Unknown request type"
+            }]
+        }
+
++ Response 409 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "409",
+                "title": "Conflict",
+                "detail": "Invalid type provided, only supported type is 'resource'"
+            }]
+        }
