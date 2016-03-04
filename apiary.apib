@@ -35,6 +35,14 @@ Api for `betterlists` project (Learning By Making)
 ## User (object)
 + data (User Base)
 
+## Author (object)
++ data
+    + id: 1
+    + type: user (string, required)
+    + attributes
+        + name: John (string)
+        + surname: Doe (string)
+
 ##########################################################################
 
 ## List Base New (object)
@@ -291,7 +299,6 @@ Api to sign up a new user
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
 
 + Response 200 (application/vnd.api+json)
 
@@ -413,7 +420,6 @@ Fetch all lists.
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
 
 + Response 200 (application/vnd.api+json)
 
@@ -494,7 +500,7 @@ Fetch all lists.
             }]
         }
 
-# Group Resource
+# Group List's Resource
 
 ## List's Resource [/lists/{list_id}/resources/{resource_id}]
 
@@ -510,7 +516,6 @@ Fetch all lists.
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
 
 + Response 200 (application/vnd.api+json)
 
@@ -636,7 +641,6 @@ Fetch all resources.
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
 
 + Response 200 (application/vnd.api+json)
 
@@ -669,7 +673,6 @@ Fetch all resources.
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
 
     + Attributes (Resource New)
 
@@ -716,3 +719,23 @@ Fetch all resources.
                 "detail": "Invalid type provided, only supported type is 'resource'"
             }]
         }
+        
+# Group List's Author
+
+## User [/lists/{id}/author]
+
++ Parameters
+    + id: 1 (required, string) - list id
+
+### Get list's author profile [GET]
+Api to get list's author profile
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Author)
