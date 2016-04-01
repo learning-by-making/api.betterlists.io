@@ -129,10 +129,6 @@ Api for `betterlists` project (Learning By Making)
 ## Resource With Relationships (object)
 + data (Resource Base With Relationships)
 
-## Resource With Relationships and Included Voters
-+ data (Resource Base With Relationships)
-+ included (array[User Base])
-
 ## Resource Collection
 + data (array[Resource Base])
 
@@ -261,7 +257,6 @@ This API destroy user session
 
 + Response 204 (application/vnd.api+json)
 
-
 # Group User
 The User resource allows users to sign up, get
 or set account properties or destroy (deactivate) their accounts.
@@ -300,7 +295,7 @@ It responds with the updated resource
             
 + Response 200 (application/vnd.api+json)
 
-### Delete user [DELETE /users/{id}]
+### Delete user [DELETE]
 Api to deactivate user
 
 + Request (application/vnd.api+json)
@@ -311,7 +306,6 @@ Api to deactivate user
             Authorization: Bearer sessionid123
 
 + Response 204 (application/vnd.api+json)
-
 
 ## User Collection [/users]
 
@@ -330,7 +324,7 @@ Api to sign up a new user
 + Response 201 (application/vnd.api+json)
 
    + Attributes (User)
-    
+
 # Group Request
 
 ## Request 
@@ -353,6 +347,7 @@ Requests can be used for things like account confirmation or password reset, whi
 ### Reset password Confirmation [GET /requests?reset_password_token={token}]
 
 + Parameters
+
     + token: absknk12lkm12mklm12 (required, string)
     
 + Request (application/vnd.api+json)
@@ -360,7 +355,6 @@ Requests can be used for things like account confirmation or password reset, whi
     + Headers
 
             Accept: application/vnd.api+json
-
 
 + Response 200 (application/vnd.api+json)
 
@@ -373,6 +367,7 @@ Requests can be used for things like account confirmation or password reset, whi
     + id: 1 (required, string) - list id
 
 ### Fetch [GET]
+#### See a single list
 
 + Request (application/vnd.api+json)
 
@@ -385,6 +380,7 @@ Requests can be used for things like account confirmation or password reset, whi
     + Attributes (List With Relationships)
 
 ### Update [PATCH]
+#### Change the title of a list
 
 + Request (application/vnd.api+json)
 
@@ -400,6 +396,7 @@ Requests can be used for things like account confirmation or password reset, whi
     + Attributes (List With Relationships)
 
 ### Delete [DELETE]
+#### Archive a list (not delete)
 
 + Request (application/vnd.api+json)
 
@@ -413,7 +410,8 @@ Requests can be used for things like account confirmation or password reset, whi
 ## List Collection [/lists]
 
 ### Fetch all lists [GET]
-Fetch all lists. 
+#### See a list of lists or 
+#### See all my lists (with authentication token)
 
 + Request (application/vnd.api+json)
 
@@ -425,7 +423,19 @@ Fetch all lists.
 
     + Attributes (List Collection With Relationships)
 
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (List Collection With Relationships)
+
 ### Create [POST]
+#### Create a list
 
 + Request (application/vnd.api+json)
 
@@ -450,6 +460,7 @@ Fetch all lists.
     + resource_id: 1 (required, string) - request resource id
 
 ### Fetch [GET]
+#### required?
 
 + Request (application/vnd.api+json)
 
@@ -461,19 +472,8 @@ Fetch all lists.
 
     + Attributes (Resource With Relationships)
 
-### Fetch with voters [GET /lists/{list_id}/resources/{resource_id}?include=voters]
-
-+ Request (application/vnd.api+json)
-
-    + Headers
-
-            Accept: application/vnd.api+json
-
-+ Response 200 (application/vnd.api+json)
-
-    + Attributes (Resource With Relationships and Included Voters)
-
 ### Update [PATCH]
+#### Update a resource
 
 + Request (application/vnd.api+json)
 
@@ -489,6 +489,7 @@ Fetch all lists.
     + Attributes (Resource With Relationships)
 
 ### Delete [DELETE]
+#### Remove a resource
 
 + Request (application/vnd.api+json)
 
@@ -506,7 +507,7 @@ Fetch all lists.
     + id: 1 (required, string) - list id
 
 ### Fetch all resources [GET]
-Fetch all resources. 
+#### required?
 
 + Request (application/vnd.api+json)
 
@@ -519,12 +520,14 @@ Fetch all resources.
     + Attributes (Resource Collection With Relationships)
 
 ### Create [POST]
+#### Add a resource
 
 + Request (application/vnd.api+json)
 
     + Headers
 
             Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
 
     + Attributes (Resource New)
 
@@ -540,7 +543,7 @@ Fetch all resources.
     + id: 1 (required, string) - list id
 
 ### Get list's author profile [GET]
-Api to get list's author profile
+#### required?
 
 + Request (application/vnd.api+json)
 
