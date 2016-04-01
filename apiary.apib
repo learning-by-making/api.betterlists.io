@@ -35,6 +35,10 @@ Api for `betterlists` project (Learning By Making)
 ## User (object)
 + data (User Base)
 
+## User Id (object)
++ id: 1
++ type: user (string)
+
 ## Author (object)
 + data
     + id: 1
@@ -42,6 +46,15 @@ Api for `betterlists` project (Learning By Making)
     + attributes
         + name: John (string)
         + surname: Doe (string)
+
+##########################################################################
+
+## Request Reset Password (object)
++ data
+    + type: request (string, required)
+    + attributes
+        + type: passwordreset (string)
+        + email: johndoe@example.com (string)
 
 ##########################################################################
 
@@ -105,7 +118,7 @@ Api for `betterlists` project (Learning By Making)
 + relationships
     + vote
         + links
-            + related: /resources/1/votes/1 (string, required)
+            + related: /resources/1/votes/1 (string)
 
 ## Resource New (object)
 + data (Resource Base New)
@@ -115,6 +128,10 @@ Api for `betterlists` project (Learning By Making)
 
 ## Resource With Relationships (object)
 + data (Resource Base With Relationships)
+
+## Resource With Relationships and Included Voters
++ data (Resource Base With Relationships)
++ included (array[User Base])
 
 ## Resource Collection
 + data (array[Resource Base])
@@ -147,6 +164,44 @@ Api for `betterlists` project (Learning By Making)
 
 ## Vote (object)
 + data (Vote Base)
+
+##########################################################################
+
+## Generic Base New (object)
++ type: generic (string, required)
++ attributes
+    + attribute: A Generic Resource (string, required)
+
+## Generic Base (object)
++ id: 1
++ Include Generic Base New
+
+## Generic New (object)
++ data (Generic Base New)
+
+## Generic (object)
++ data (Generic Base)
+
+## Generic Invalid Attribute (object)
++ id: 1
++ data
+    + type: generic (string, required)
+    + attributes
+        + attribute: too short (string, required)
+
+## Generic Wrong Type (object)
++ id: 1
++ data
+    + type: wrong_type (string, required)
+    + attributes
+        + attribute: A Generic Resource (string, required)
+
+## Generic Wrong Id (object)
++ id: 2
++ Include Generic Base New
+
+## Generic Collection
++ data (array[Generic Base])
 
 ##########################################################################
 
@@ -257,14 +312,6 @@ Api to deactivate user
 
 + Response 204 (application/vnd.api+json)
 
-## Password reset [/users/{id}/password]
-Da riformulare, il client non conosce il suo ID
-
-### Reset password [POST]
-
-+ Request (application/vnd.api+json)
-
-+ Response 204 (application/vnd.api+json)
 
 ## User Collection [/users]
 
@@ -284,6 +331,39 @@ Api to sign up a new user
 
    + Attributes (User)
     
+# Group Request
+
+## Request 
+Requests can be used for things like account confirmation or password reset, which require app-specific workflows. Authentication might or might not be needed, depending on the type of request.
+
+## Request Collection [/requests]
+
+### Reset password [POST]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Attributes (Request Reset Password)
+
++ Response 201 (application/vnd.api+json)
+
+### Reset password Confirmation [GET /requests?reset_password_token={token}]
+
++ Parameters
+    + token: absknk12lkm12mklm12 (required, string)
+    
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+
++ Response 200 (application/vnd.api+json)
+
 # Group List
 
 ## List [/lists/{id}]
@@ -304,26 +384,6 @@ Api to sign up a new user
 
     + Attributes (List With Relationships)
 
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
-
 ### Update [PATCH]
 
 + Request (application/vnd.api+json)
@@ -339,46 +399,6 @@ Api to sign up a new user
 
     + Attributes (List With Relationships)
 
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
-
-+ Response 403 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "403",
-                "title": "Forbidden",
-                "detail": "Unknown request type"
-            }]
-        }
-
-+ Response 409 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "409",
-                "title": "Conflict",
-                "detail": "Invalid type provided, only supported type is 'list'"
-            }]
-        }
-
 ### Delete [DELETE]
 
 + Request (application/vnd.api+json)
@@ -389,26 +409,6 @@ Api to sign up a new user
             Authorization: Bearer sessionid123
 
 + Response 204 (application/vnd.api+json)
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
 
 ## List Collection [/lists]
 
@@ -425,26 +425,6 @@ Fetch all lists.
 
     + Attributes (List Collection With Relationships)
 
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
-
 ### Create [POST]
 
 + Request (application/vnd.api+json)
@@ -459,46 +439,6 @@ Fetch all lists.
 + Response 201 (application/vnd.api+json)
 
     + Attributes (List With Relationships)
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
-
-+ Response 403 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "403",
-                "title": "Forbidden",
-                "detail": "Unknown request type"
-            }]
-        }
-
-+ Response 409 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "409",
-                "title": "Conflict",
-                "detail": "Invalid type provided, only supported type is 'list'"
-            }]
-        }
 
 # Group List's Resource
 
@@ -521,25 +461,17 @@ Fetch all lists.
 
     + Attributes (Resource With Relationships)
 
-+ Response 401 (application/vnd.api+json)
+### Fetch with voters [GET /lists/{list_id}/resources/{resource_id}?include=voters]
 
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
++ Request (application/vnd.api+json)
 
-+ Response 401 (application/vnd.api+json)
+    + Headers
 
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Resource With Relationships and Included Voters)
 
 ### Update [PATCH]
 
@@ -556,46 +488,6 @@ Fetch all lists.
 
     + Attributes (Resource With Relationships)
 
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
-
-+ Response 403 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "403",
-                "title": "Forbidden",
-                "detail": "Unknown request type"
-            }]
-        }
-
-+ Response 409 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "409",
-                "title": "Conflict",
-                "detail": "Invalid type provided, only supported type is 'resource'"
-            }]
-        }
-
 ### Delete [DELETE]
 
 + Request (application/vnd.api+json)
@@ -606,26 +498,6 @@ Fetch all lists.
             Authorization: Bearer sessionid123
 
 + Response 204 (application/vnd.api+json)
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
 
 ## List's Resource Collection [/lists/{id}/resources]
 
@@ -646,26 +518,6 @@ Fetch all resources.
 
     + Attributes (Resource Collection With Relationships)
 
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
-
 ### Create [POST]
 
 + Request (application/vnd.api+json)
@@ -680,46 +532,6 @@ Fetch all resources.
 
     + Attributes (Resource With Relationships)
 
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Authorization header missing"
-            }]
-        }
-
-+ Response 401 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "401",
-                "title": "Unauthorized",
-                "detail": "Session invalid"
-            }]
-        }
-
-+ Response 403 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "403",
-                "title": "Forbidden",
-                "detail": "Unknown request type"
-            }]
-        }
-
-+ Response 409 (application/vnd.api+json)
-
-        {
-            errors: [{
-                "status": "409",
-                "title": "Conflict",
-                "detail": "Invalid type provided, only supported type is 'resource'"
-            }]
-        }
-        
 # Group List's Author
 
 ## User [/lists/{id}/author]
@@ -739,3 +551,381 @@ Api to get list's author profile
 + Response 200 (application/vnd.api+json)
 
     + Attributes (Author)
+    
+# Group Errors
+
+## Invalid Session
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Authorization header missing"
+            }]
+        }
+        
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Invalid sessionid123
+
++ Response 401 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "401",
+                "title": "Unauthorized",
+                "detail": "Session invalid"
+            }]
+        }
+
+## Generic Resource [/generics/{id}]
+
++ Parameters
+
+    + id: 1 (required, string) - generic resource id
+
+### fetch generic resource that not exist [GET]
+
+#### Responses
+http://jsonapi.org/format/#fetching-resources-responses
+##### 404 Not Found
+A server MUST respond with 404 Not Found when processing a request to fetch a single resource that does not exist.
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 404 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "404",
+                "title": "Not Found",
+                "detail": "Generic Resource Not Found"
+            }]
+        }
+
+### update generic resource [PATCH]
+ 
+#### Responses
+http://jsonapi.org/format/#crud-updating-responses
+##### 403 Forbidden
+A server MUST return 403 Forbidden in response to an unsupported request to update a resource or relationship.
+##### 404 Not Found
+A server MUST return 404 Not Found when processing a request to modify a resource that does not exist.
+##### 409 Conflict
+A server MAY return 409 Conflict when processing a PATCH request to update a resource if that update would violate other server-enforced constraints (such as a uniqueness constraint on a property other than id).
+A server MUST return 409 Conflict when processing a PATCH request in which the resource object's type and id do not match the server's endpoint.
+A server SHOULD include error details and provide enough information to recognize the source of the conflict.
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+        
+    + Attributes (Generic)
+         
++ Response 403 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Unknown request type"
+            }]
+        }
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
+    + Attributes (Generic)
+
++ Response 404 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "404",
+                "title": "Not Found",
+                "detail": "Generic Resource Not Found"
+            }]
+        }
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
+    + Attributes (Generic Invalid Attribute)
+
++ Response 409 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "409",
+                "title": "Conflict",
+                "detail": "Invalid attibute provided: too short, it's lenght must be minimum 10 chars"
+            }]
+        }
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
+    + Attributes (Generic Wrong Type)
+
++ Response 409 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "409",
+                "title": "Conflict",
+                "detail": "Invalid type provided, only supported type is 'generic_resource'"
+            }]
+        }
+        
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
+    + Attributes (Generic Wrong Id)
+
++ Response 409 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "409",
+                "title": "Conflict",
+                "detail": "Invalid id provided, only supported id is '1'"
+            }]
+        }
+
+### Delete [DELETE]
+
+#### Responses
+http://jsonapi.org/format/#crud-deleting-responses
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 404 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "404",
+                "title": "Not Found",
+                "detail": "Generic Resource Not Found"
+            }]
+        }
+
+## Generic Resource Collection [/generics]
+
+### CREATE [POST]
+
+#### Responses
+http://jsonapi.org/format/#crud-creating-responses
+http://jsonapi.org/format/#crud-creating-client-ids
+##### 403 Forbidden
+A server MAY return 403 Forbidden in response to an unsupported request to create a resource.
+A server MUST return 403 Forbidden in response to an unsupported request to create a resource with a client-generated ID.
+##### 409 Conflict
+A server MUST return 409 Conflict when processing a POST request to create a resource with a client-generated ID that already exists.
+A server MUST return 409 Conflict when processing a POST request in which the resource object's type is not among the type(s) that constitute the collection represented by the endpoint.
+A server SHOULD include error details and provide enough information to recognize the source of the conflict.
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+        
+    + Attributes (Generic New)
+         
++ Response 403 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Unknown request type"
+            }]
+        }
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
+    + Attributes (Generic)
+
++ Response 403 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Unsupported request to create a resource with a client-generated ID"
+            }]
+        }
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
+    + Attributes (Generic Wrong Type)
+
++ Response 409 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "409",
+                "title": "Conflict",
+                "detail": "Invalid type provided, only supported type is 'generic_resource'"
+            }]
+        }
+
+## Generic Nested Resource [/parents/{parent_id}/generics{id}]
+
++ Parameters
+
+    + parent_id: 1 (required, string) - parent resource id
+    + id: 1 (required, string) - generic resource id
+
+### fetch a nested resource of a parent resource that not exist [GET]
+
+#### Responses
+http://jsonapi.org/format/#fetching-relationships-responses
+##### 404 Not Found
+A server MUST return 404 Not Found when processing a request to fetch a relationship link URL that does not exist.
+###### Note: This can happen when the parent resource of the relationship does not exist.
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 404 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "404",
+                "title": "Not Found",
+                "detail": "Parent Resource Not Found"
+            }]
+        }
+
+### update a nested resource of a generic resource that not exist [PATCH]
+
+#### Responses
+http://jsonapi.org/format/#crud-updating-responses
+http://jsonapi.org/format/#crud-updating-relationship-responses
+##### 403 Forbidden
+A server MUST return 403 Forbidden in response to an unsupported request to update a relationship.
+##### 404 Not Found
+A server MUST return 404 Not Found when processing a request that references a related resource that does not exist.
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
+    + Attributes (Generic)
+
++ Response 403 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "403",
+                "title": "Forbidden",
+                "detail": "Unknown request type"
+            }]
+        }
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+            
+    + Attributes (Generic)
+
++ Response 404 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "404",
+                "title": "Not Found",
+                "detail": "Parent Resource Not Found"
+            }]
+        }
+        
+## Generic Nested Resource Collection [/parents/{parent_id}/generics]
+
++ Parameters
+
+    + parent_id: 1 (required, string) - parent resource id
+    
+### Fetch all nested resource of a parent resource that not exist [GET]
+
+#### Responses
+http://jsonapi.org/format/#fetching-relationships-responses
+##### 404 Not Found
+A server MUST return 404 Not Found when processing a request to fetch a relationship link URL that does not exist.
+###### Note: This can happen when the parent resource of the relationship does not exist.
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+            Authorization: Bearer sessionid123
+
++ Response 404 (application/vnd.api+json)
+
+        {
+            errors: [{
+                "status": "404",
+                "title": "Not Found",
+                "detail": "Parent Resource Not Found"
+            }]
+        }
