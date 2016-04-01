@@ -555,6 +555,39 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Attributes (Author)
     
+# Group Resource's Vote
+
+## Resource's Vote [/resources/{id}/vote]
+
++ Parameters
+    + id: 1 (required, string) - resource id
+
+### Get the singular vote of a resource [GET]
+##### see how many listers voted a resource in a list
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Vote)
+    
+### Increment by one the vote's value [PATCH]
+#### add my vote to a resource I like
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Vote)
+    
 # Group Errors
 
 ## Invalid Session
