@@ -86,14 +86,15 @@ Api for `betterlists` project (Learning By Making)
 ## List With Relationships (object)
 + data (List Base With Relationships)
 
-## List Collection
+## List Collection (object)
++ Include List Pagination Links
 + data (array[List Base])
 
-## List Collection With Relationships
+## List Collection With Relationships (object)
 + Include List Pagination Links
 + data (array[List Base With Relationships])
 
-## List Pagination Links
+## List Pagination Links (object)
 + links
     + self: /lists?page[number]=3&page[size]=2
     + first: /lists?page[number]=1&page[size]=2
@@ -101,13 +102,17 @@ Api for `betterlists` project (Learning By Making)
     + next: /lists?page[number]=4&page[size]=2
     + last: /lists?page[number]=13&page[size]=2
 
+## List With Relationships and Included Resources (object)
++ Include List With Relationships
++ included (array[Resource Base With Relationships and Included Vote])
+
 ##########################################################################
 
 ## Resource Base New (object)
 + type: resource (string, required)
 + attributes
     + title: A List's Resource (string, required)
-    + url (string)
+    + url: http://jsonapi.org/ (string)
 
 ## Resource Base (object)
 + id: 1
@@ -120,6 +125,10 @@ Api for `betterlists` project (Learning By Making)
         + links
             + related: /resources/1/votes/1 (string)
 
+## Resource Base With Relationships and Included Vote (object)
++ Include Resource Base With Relationships
++ included (Vote Base)
+
 ## Resource New (object)
 + data (Resource Base New)
 
@@ -129,14 +138,14 @@ Api for `betterlists` project (Learning By Making)
 ## Resource With Relationships (object)
 + data (Resource Base With Relationships)
 
-## Resource Collection
+## Resource Collection (object)
 + data (array[Resource Base])
 
-## Resource Collection With Relationships
+## Resource Collection With Relationships (object)
 + Include Resource Pagination Links
 + data (array[Resource Base With Relationships])
 
-## Resource Pagination Links
+## Resource Pagination Links (object)
 + links
     + self: /resources?page[number]=3&page[size]=2
     + first: /resources?page[number]=1&page[size]=2
@@ -196,7 +205,7 @@ Api for `betterlists` project (Learning By Making)
 + id: 2
 + Include Generic Base New
 
-## Generic Collection
+## Generic Collection (object)
 + data (array[Generic Base])
 
 ##########################################################################
@@ -378,6 +387,19 @@ Requests can be used for things like account confirmation or password reset, whi
 + Response 200 (application/vnd.api+json)
 
     + Attributes (List With Relationships)
+
+### Fetch a list including its resources [GET /lists/{id}?include=resources]
+#### Embed any lists in any website
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (List With Relationships and Included Resources)
 
 ### Update [PATCH]
 #### Change the title of a list
