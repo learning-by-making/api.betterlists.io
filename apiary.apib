@@ -102,9 +102,9 @@ Api for `betterlists` project (Learning By Making)
     + next: /lists?page[number]=4&page[size]=2
     + last: /lists?page[number]=13&page[size]=2
 
-## List With Relationships and Included Resources (object)
+## List With Relationships Including Author and Resources (object)
 + Include List With Relationships
-+ included (array[Resource Base With Relationships and Included Vote])
++ included (array[Author, Resource Base With Relationships and Included Vote])
 
 ##########################################################################
 
@@ -388,7 +388,7 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Attributes (List With Relationships)
 
-### Fetch a list including its resources [GET /lists/{id}?include=resources]
+### Fetch a list including its author and resources [GET /lists/{id}?include=author,resources]
 #### Embed any lists in any website
 
 + Request (application/vnd.api+json)
@@ -399,7 +399,7 @@ Requests can be used for things like account confirmation or password reset, whi
 
 + Response 200 (application/vnd.api+json)
 
-    + Attributes (List With Relationships and Included Resources)
+    + Attributes (List With Relationships Including Author and Resources)
 
 ### Update [PATCH]
 #### Change the title of a list
