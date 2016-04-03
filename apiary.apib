@@ -14,23 +14,46 @@ Api for `betterlists` project (Learning By Making)
 
 ##########################################################################
 
+## Author Attributes (object)
++ name: John (string)
++ surname: Doe (string)
+
+## User Attributes (object)
++ Include Author Attributes
++ email: johndoe@example.com (string)
++ city: Rome (string)
++ privacy: true (boolean)
++ phone: +12 213 1232121 (string)
+
+## User Attributes New (object)
++ Include User Attributes
++ password: sekr3t (string)
++ password_confirmation: sekr3t (string)
+
+## Author Base (object)
++ id: 1
++ type: user (string, required)
++ attributes (Author Attributes)
+
 ## User Base New (object)
 + type: user (string, required)
-+ attributes
-    + email: johndoe@example.com (string)
-    + password: sekr3t (string)
-    + name: John (string)
-    + surname: Doe (string)
-    + city: Rome (string)
-    + privacy: true (boolean)
-    + phone: +12 213 1232121 (string)
++ attributes (User Attributes New)
 
+## User Base Edit (object)
++ id: 1
++ type: user (string, required)
++ attributes (User Attributes New)
+    
 ## User Base (object)
 + id: 1
-+ Include User Base New
++ type: user (string, required)
++ attributes (User Attributes)
 
 ## User New (object)
 + data (User Base New)
+
+## User Edit (object)
++ data (User Base Edit)
 
 ## User (object)
 + data (User Base)
@@ -40,12 +63,7 @@ Api for `betterlists` project (Learning By Making)
 + type: user (string)
 
 ## Author (object)
-+ data
-    + id: 1
-    + type: user (string, required)
-    + attributes
-        + name: John (string)
-        + surname: Doe (string)
++ data (Author Base)
 
 ##########################################################################
 
@@ -276,7 +294,7 @@ or set account properties or destroy (deactivate) their accounts.
     + id (number) - ID of the User in the form of an integer
 
 ### Get user profile [GET]
-Api to get user profile
+#### See my profile
 
 + Request (application/vnd.api+json)
 
@@ -290,10 +308,7 @@ Api to get user profile
     + Attributes (User)
 
 ### Update user information [PATCH]
-API to update user information.
-It responds with the updated resource
-
-+ Attributes (User)
+#### Edit my profile
 
 + Request (application/vnd.api+json)
 
@@ -302,10 +317,14 @@ It responds with the updated resource
             Accept: application/vnd.api+json
             Authorization: Bearer sessionid123
             
+    + Attributes (User Edit)
+            
 + Response 200 (application/vnd.api+json)
 
+    + Attributes (User)
+
 ### Delete user [DELETE]
-Api to deactivate user
+#### Delete (deactivate) my profile
 
 + Request (application/vnd.api+json)
     
@@ -319,7 +338,7 @@ Api to deactivate user
 ## User Collection [/users]
 
 ### Sign up a new user [POST]
-Api to sign up a new user
+#### Create a new profile
 
 + Request (application/vnd.api+json)
 
