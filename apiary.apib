@@ -8,9 +8,26 @@ Api for `betterlists` project (Learning By Making)
 
 # Data Structures
 
-## Session (object)
-+ email: johndoe@example.com (string, required)
-+ password: sekr3t (string, required)
+## Sign In (object)
++ data
+    + type: auth (string, required)
+    + attributes
+        + email: johndoe@example.com (string, required)
+        + password: sekr3t (string, required)
+
+## Password (object)
++ data
+    + type: password (string, required)
+    + attributes
+        + password: sekr3t (string)
+        + password_confirmation: sekr3t (string)
+
+## Reset Password (object)
++ data
+    + type: reset_password (string, required)
+    + attributes
+        + email: johndoe@example.com (string, required)
+        + redirect_url: https://betterlist.io/home (string, required)
 
 ##########################################################################
 
@@ -43,7 +60,7 @@ Api for `betterlists` project (Learning By Making)
 + id: 1
 + type: user (string, required)
 + attributes (User Attributes New)
-    
+
 ## User Base (object)
 + id: 1
 + type: user (string, required)
@@ -60,15 +77,6 @@ Api for `betterlists` project (Learning By Making)
 
 ## Author (object)
 + data (Author Base)
-
-##########################################################################
-
-## Request Reset Password (object)
-+ data
-    + type: request (string, required)
-    + attributes
-        + type: passwordreset (string)
-        + email: johndoe@example.com (string)
 
 ##########################################################################
 
@@ -224,65 +232,238 @@ Api for `betterlists` project (Learning By Making)
 
 ##########################################################################
 
-# Group Session
+# Group Authentication
 
-## Session [/sessions]
-The session resource allows users to sign in, sign out and to check their current session status.
-A user can have several open sessions at the same time.
-If the session identified by the Authorization header can't be found, a `401` error is returned.
+## Manage Account [/auth]
 
-### Sign in [POST]
-User sign in.
-This API returns the email and the authentication token in the response body on succesfully login.
-(? token in the body or in the header? )
+### Account Registration [POST]
+#### Create a new profile
 
-+ Attributes (Session)
-        
 + Request (application/vnd.api+json)
 
-        {
-            "data": {
-                "type": "session",
-                "attributes": {
-                    "email": "johndoe@example.com",
-                    "password": "sekr3t"
-                }
-            }
-        }
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Attributes (User New)
 
 + Response 201 (application/vnd.api+json)
 
-    + Body
+    + Headers
             
-            { 
-                "data": {
-                    "type": "session",
-                    "attributes": {
-                        "email": "johndoe@example.com",
-                        "auth_token": "sessionid123"
-                    }
-                }
-            }
+            Location: /users/1
 
-### Sign out [DELETE /sessions/{id}]
-User sign out.
-This API destroy user session
+   + Attributes (User)
 
-+ Parameters
-    + id (number) - ID of the User in the form of an integer
+### Account updates [PUT]
+#### Edit my profile
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+            
+    + Attributes (User Edit)
+            
++ Response 200 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+
+    + Attributes (User)
+
+### Account deletion [DELETE]
+#### Delete (deactivate) my profile
 
 + Request (application/vnd.api+json)
     
     + Headers
-
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
 + Response 204 (application/vnd.api+json)
 
+## Registration Confirmation [/auth/confirmation?confirmation_token=cacCESRq2swT-5NRjSwi&redirect_url=https://betterlist.io/home]
+
+### Registration Confirmation [GET]
+#### Confirm your account
+
++ Request (application/vnd.api+json)
+
++ Response 301 (application/vnd.api+json)
+
+## Sign In [/auth/sign_in]
+
+### Sign In [POST]
+#### Login with email and password 
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
+    + Attributes (Sign In)
+
++ Response 200 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+
+    + Attributes (User)
+
+## Sign Out [/auth/sign_out]
+
+### Sign Out [DELETE]
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+
++ Response 204 (application/vnd.api+json)
+
+## OAuth2 Sign In Request [/auth/{provider}]
+
+### OAuth2 Request [GET]
+#### Destination for client authentication
+
++ Request (application/vnd.api+json)
+
++ Response 301 (application/vnd.api+json)
+
+## OAuth2 Sign In Response [/auth/{provider}/callback]
+
+### OAuth2 Response [POST]
+#### Destination for the oauth2 provider's callback uri
+
++ Request (application/vnd.api+json)
+
++ Response 200 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+
+    + Attributes (User)
+
+## Validate Token [/auth/validate_token]
+
+### Validate Token [GET]
+#### Validate tokens on return visits to the client
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+
++ Response 200 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+
+    + Attributes (User)
+
+## Password [/auth/password]
+
+### Reset Password [POST]
+#### Send a password reset confirmation email 
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+            
+    + Attributes (Reset Password)
+
++ Response 200 (application/vnd.api+json)
+
+### Change Password [PUT]
+#### Change users' passwords
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+
+    + Attributes (Password)
+
++ Response 200 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+
+    + Attributes (User)
+
+## Reset Password Confirmation [/auth/password/edit?redirect_url=https://betterlist.io/home&reset_password_token=krcYvhZRxZ1cqseKH3iN]
+
+### Reset Password Confirmation [GET]
+#### Verify user by password reset token
+
++ Request (application/vnd.api+json)
+
++ Response 301 (application/vnd.api+json)
+
 # Group User
-The User resource allows users to sign up, get
-or set account properties or destroy (deactivate) their accounts.
 
 ## User [/users/{id}]
 
@@ -296,91 +477,24 @@ or set account properties or destroy (deactivate) their accounts.
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
 + Response 200 (application/vnd.api+json)
 
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+            
     + Attributes (User)
-
-### Update user information [PATCH]
-#### Edit my profile
-
-+ Request (application/vnd.api+json)
-
-    + Headers
-
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
-            
-    + Attributes (User Edit)
-            
-+ Response 200 (application/vnd.api+json)
-
-    + Attributes (User)
-
-### Delete user [DELETE]
-#### Delete (deactivate) my profile
-
-+ Request (application/vnd.api+json)
-    
-    + Headers
-            
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
-
-+ Response 204 (application/vnd.api+json)
-
-## User Collection [/users]
-
-### Sign up a new user [POST]
-#### Create a new profile
-
-+ Request (application/vnd.api+json)
-
-    + Headers
-
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
-
-    + Attributes (User New)
-
-+ Response 201 (application/vnd.api+json)
-
-   + Attributes (User)
-
-# Group Request
-
-## Request 
-Requests can be used for things like account confirmation or password reset, which require app-specific workflows. Authentication might or might not be needed, depending on the type of request.
-
-## Request Collection [/requests]
-
-### Reset password [POST]
-
-+ Request (application/vnd.api+json)
-
-    + Headers
-
-            Accept: application/vnd.api+json
-
-    + Attributes (Request Reset Password)
-
-+ Response 201 (application/vnd.api+json)
-
-### Reset password Confirmation [GET /requests?reset_password_token={token}]
-
-+ Parameters
-
-    + token: absknk12lkm12mklm12 (required, string)
-    
-+ Request (application/vnd.api+json)
-
-    + Headers
-
-            Accept: application/vnd.api+json
-
-+ Response 200 (application/vnd.api+json)
 
 # Group List
 
@@ -423,12 +537,24 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
     + Attributes (List)
 
 + Response 201 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
     + Attributes (List With Relationships)
 
@@ -439,10 +565,22 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
 + Response 204 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
 ## List Collection [/lists]
 
@@ -464,10 +602,22 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
 + Response 200 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
     + Attributes (List Collection With Relationships)
 
@@ -478,13 +628,25 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
     + Attributes (List New)
 
 + Response 201 (application/vnd.api+json)
 
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+            
     + Attributes (List With Relationships)
 
 # Group List's Resource
@@ -516,12 +678,24 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
     + Attributes (Resource)
 
 + Response 201 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
     + Attributes (Resource With Relationships)
 
@@ -532,10 +706,22 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
 + Response 204 (application/vnd.api+json)
+
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
 ## List's Resource Collection [/lists/{id}/resources]
 
@@ -563,13 +749,25 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   NyUIH_nI3vsKkNFtu3hmOA
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
     + Attributes (Resource New)
 
 + Response 201 (application/vnd.api+json)
 
+    + Headers
+
+            Access-Token:   0QnDIAYmMBNGtwxXo7AQiw
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
+            
     + Attributes (Resource With Relationships)
 
 # Group List's Author
@@ -627,7 +825,9 @@ Requests can be used for things like account confirmation or password reset, whi
     
 # Group Errors
 
-## Invalid Session
+## Invalid Token [/requests]
+
+### Invalid Token [GET]
 
 + Request (application/vnd.api+json)
 
@@ -649,8 +849,12 @@ Requests can be used for things like account confirmation or password reset, whi
 
     + Headers
 
-            Accept: application/vnd.api+json
-            Authorization: Invalid sessionid123
+            Accept:         application/vnd.api+json
+            Access-Token:   invalid_token
+            Client:         R9H84prlUIrrYPXr4iKuDQ
+            Expiry:         1438378648
+            Token-Type:     Bearer
+            UID:            johndoe@example.com
 
 + Response 401 (application/vnd.api+json)
 
@@ -658,7 +862,7 @@ Requests can be used for things like account confirmation or password reset, whi
             errors: [{
                 "status": "401",
                 "title": "Unauthorized",
-                "detail": "Session invalid"
+                "detail": "Token invalid"
             }]
         }
 
@@ -709,7 +913,6 @@ A server SHOULD include error details and provide enough information to recogniz
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
         
     + Attributes (Generic)
          
@@ -728,7 +931,6 @@ A server SHOULD include error details and provide enough information to recogniz
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
             
     + Attributes (Generic)
 
@@ -747,7 +949,6 @@ A server SHOULD include error details and provide enough information to recogniz
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
             
     + Attributes (Generic Invalid Attribute)
 
@@ -766,7 +967,6 @@ A server SHOULD include error details and provide enough information to recogniz
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
             
     + Attributes (Generic Wrong Type)
 
@@ -785,7 +985,6 @@ A server SHOULD include error details and provide enough information to recogniz
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
             
     + Attributes (Generic Wrong Id)
 
@@ -809,7 +1008,6 @@ http://jsonapi.org/format/#crud-deleting-responses
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
 
 + Response 404 (application/vnd.api+json)
 
@@ -841,7 +1039,6 @@ A server SHOULD include error details and provide enough information to recogniz
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
         
     + Attributes (Generic New)
          
@@ -860,7 +1057,6 @@ A server SHOULD include error details and provide enough information to recogniz
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
             
     + Attributes (Generic)
 
@@ -879,7 +1075,6 @@ A server SHOULD include error details and provide enough information to recogniz
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
             
     + Attributes (Generic Wrong Type)
 
@@ -939,7 +1134,6 @@ A server MUST return 404 Not Found when processing a request that references a r
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
             
     + Attributes (Generic)
 
@@ -958,7 +1152,6 @@ A server MUST return 404 Not Found when processing a request that references a r
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
             
     + Attributes (Generic)
 
@@ -991,7 +1184,6 @@ A server MUST return 404 Not Found when processing a request to fetch a relation
     + Headers
 
             Accept: application/vnd.api+json
-            Authorization: Bearer sessionid123
 
 + Response 404 (application/vnd.api+json)
 
