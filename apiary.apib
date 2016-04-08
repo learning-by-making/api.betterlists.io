@@ -517,7 +517,8 @@ Api for `betterlists` project (Learning By Making)
     + Attributes (List With Relationships)
 
 ### Fetch a list including its author and resources [GET /lists/{id}?include=author,resources]
-#### Embed any lists in any website
+#### Embed any lists in any website or
+#### Share a list on/to Facebook (or Twitter or…)
 
 + Request (application/vnd.api+json)
 
@@ -617,6 +618,23 @@ Api for `betterlists` project (Learning By Making)
             Expiry:         1438378648
             Token-Type:     Bearer
             UID:            johndoe@example.com
+
+    + Attributes (List Collection With Relationships)
+
+### Search [GET /lists{?filter}]
+#### Search through the lists
+
++ Parameters
+    + filter
+        + query (optional, string)
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
 
     + Attributes (List Collection With Relationships)
 
@@ -721,19 +739,32 @@ Api for `betterlists` project (Learning By Making)
             Token-Type:     Bearer
             UID:            johndoe@example.com
 
-## List's Resource Collection [/lists/{id}/resources{?sort,page}]
+## List's Resource Collection [/lists/{id}/resources]
 
 + Parameters
     + id: 1 (required, string) - list id
 
 ### Fetch all resources [GET]
-#### See last added resources in a list if sorting by 'created_at' in combination with pagination
+#### required?
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Resource Collection With Relationships)
+
+### See last added resources [GET /lists/{id}/resources{?sort,page}]
+#### See last added resources in a list
 
 + Parameters
-    + sort: `-created_at` (string, optional)
+    + sort: `-created_at` (optional, string)
     + page (enum, optional)
-        + number: 1 (integer, optional)
-        + size: 5 (integer, optional)
+        + number: 1 (optional, integer)
+        + size: 5 (optional, integer)
 
 + Request (application/vnd.api+json)
 
