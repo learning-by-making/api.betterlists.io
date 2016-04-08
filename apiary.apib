@@ -118,11 +118,11 @@ Api for `betterlists` project (Learning By Making)
 
 ## List Pagination Links (object)
 + links
-    + self: /lists?page[number]=3&page[size]=2
-    + first: /lists?page[number]=1&page[size]=2
-    + prev: /lists?page[number]=2&page[size]=2
-    + next: /lists?page[number]=4&page[size]=2
-    + last: /lists?page[number]=13&page[size]=2
+    + self: /lists?page[number]=3&page[size]=1
+    + first: /lists?page[number]=1&page[size]=1
+    + prev: /lists?page[number]=2&page[size]=1
+    + next: /lists?page[number]=4&page[size]=1
+    + last: /lists?page[number]=13&page[size]=1
 
 ## List With Relationships Including Author and Resources (object)
 + Include List With Relationships
@@ -169,11 +169,11 @@ Api for `betterlists` project (Learning By Making)
 
 ## Resource Pagination Links (object)
 + links
-    + self: /resources?page[number]=3&page[size]=2
-    + first: /resources?page[number]=1&page[size]=2
-    + prev: /resources?page[number]=2&page[size]=2
-    + next: /resources?page[number]=4&page[size]=2
-    + last: /resources?page[number]=13&page[size]=2
+    + self: /resources?page[number]=3&page[size]=1
+    + first: /resources?page[number]=1&page[size]=1
+    + prev: /resources?page[number]=2&page[size]=1
+    + next: /resources?page[number]=4&page[size]=1
+    + last: /resources?page[number]=13&page[size]=1
 
 ##########################################################################
 
@@ -350,7 +350,7 @@ Api for `betterlists` project (Learning By Making)
 
 + Response 204 (application/vnd.api+json)
 
-## OAuth2 Sign In Request [/auth/{provider}]
+## OAuth2 Request [/auth/{provider}]
 
 ### OAuth2 Request [GET]
 #### Destination for client authentication
@@ -359,7 +359,7 @@ Api for `betterlists` project (Learning By Making)
 
 + Response 301 (application/vnd.api+json)
 
-## OAuth2 Sign In Response [/auth/{provider}/callback]
+## OAuth2 Response [/auth/{provider}/callback]
 
 ### OAuth2 Response [POST]
 #### Destination for the oauth2 provider's callback uri
@@ -501,7 +501,6 @@ Api for `betterlists` project (Learning By Making)
 ## List [/lists/{id}]
 
 + Parameters
-
     + id: 1 (required, string) - list id
 
 ### Fetch [GET]
@@ -654,7 +653,6 @@ Api for `betterlists` project (Learning By Making)
 ## List's Resource [/lists/{list_id}/resources/{resource_id}]
 
 + Parameters
-
     + list_id: 1 (required, string) - request list id
     + resource_id: 1 (required, string) - request resource id
 
@@ -723,14 +721,19 @@ Api for `betterlists` project (Learning By Making)
             Token-Type:     Bearer
             UID:            johndoe@example.com
 
-## List's Resource Collection [/lists/{id}/resources]
+## List's Resource Collection [/lists/{id}/resources{?sort,page}]
 
 + Parameters
-
     + id: 1 (required, string) - list id
 
 ### Fetch all resources [GET]
-#### required?
+#### See last added resources in a list if sorting by 'created_at' in combination with pagination
+
++ Parameters
+    + sort: `-created_at` (string, optional)
+    + page (enum, optional)
+        + number: 1 (integer, optional)
+        + size: 5 (integer, optional)
 
 + Request (application/vnd.api+json)
 
