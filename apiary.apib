@@ -177,20 +177,25 @@ Api for `betterlists` project (Learning By Making)
 
 ##########################################################################
 
-## Vote Base New (object)
+## Vote Base (object)
++ id: 1
 + type: vote (string, required)
 + attributes
     + value: 0 (number, required)
-
-## Vote Base (object)
-+ id: 1
-+ Include Vote Base New
-
-## Vote New (object)
-+ data (Vote Base New)
-
+    
 ## Vote (object)
 + data (Vote Base)
+
+##########################################################################
+
+## Click Base (object)
++ id: 1
++ type: click (string, required)
++ attributes
+    + value: 0 (number, required)
+    
+## Click (object)
++ data (Click Base)
 
 ##########################################################################
 
@@ -626,7 +631,7 @@ Api for `betterlists` project (Learning By Making)
 
 + Parameters
     + filter
-        + query (optional, string)
+        + query: full text string (optional, string)
 
 + Request (application/vnd.api+json)
 
@@ -857,6 +862,39 @@ Api for `betterlists` project (Learning By Making)
 
     + Attributes (Vote)
     
+# Group Resource's Click
+
+## Resource's Click [/resources/{id}/click]
+
++ Parameters
+    + id: 1 (required, string) - resource id
+
+### Fetch the singular click counter of a resource [GET]
+##### see how many times a link was clicked
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Click)
+    
+### Increment by one the click's value [PATCH]
+#### increment the click counter when I click a resource's url
+
++ Request (application/vnd.api+json)
+
+    + Headers
+
+            Accept: application/vnd.api+json
+
++ Response 200 (application/vnd.api+json)
+
+    + Attributes (Click)
+
 # Group Errors
 
 ## Invalid Token [/requests]
