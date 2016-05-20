@@ -37,3 +37,6 @@ build/
 
 # ide files
 .idea
+
+# development environment
+api.betterlists.io-vm
